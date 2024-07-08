@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <video id="bg-1" autoplay loop muted>
+        <source src="bg/bg-1.mp4" type="video/mp4">
+    </video>
+    <video id="bg-2" autoplay loop muted>
+        <source src="bg/bg-2.mp4" type="video/mp4">
+    </video>
+    <video id="bg-3" autoplay loop muted>
+        <source src="bg/bg-3.mp4" type="video/mp4">
+    </video>
+    <video id="fire" autoplay loop muted>
+        <source src="bg/bg-fire.mp4" type="video/mp4">
+    </video>
+    <div class="container">
+        <div class="hero">
+            <div id="xp">XP: <span>0</span></div>
+            <div id="health">Health: <span>100</span></div>
+            <div id="gold">Gold: <span>100</span></div>
+            <div class="switch-wrap">
+                <div class="switch-btn" onclick="toggleSwitch()">
+                    <div class="switch-thumb"></div>
+                    <!-- <div class="switch-status"></div> -->
+                </div>
+            </div>
+        </div>
+        <div class="functions">
+            <button id="store" class="func-btn">Store</button>
+            <button id="forest" class="func-btn">Forest</button>
+            <button id="war" class="func-btn">War</button>
+
+        </div>
+        <div class="locations">
+            <p id="location-p"></p>
+
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
