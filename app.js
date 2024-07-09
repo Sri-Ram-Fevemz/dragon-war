@@ -51,23 +51,28 @@ const locationElementP = document.querySelector('#location-p')
 
 // Local Variables 
 let xp = 0
-let health = 100
+let health = 80
 let gold = 100
 let currentWeapons = 0
 let fighting
 let monsterHealth
 let inventory = ['stick']
 
-// local storage variables
-const xpLocal = localStorage.getItem(''),
-    healthLocal = localStorage.getItem(''),
-    goldLocal = localStorage.getItem(''),
-    currentWeaponsLocal = localStorage.getItem(''),
-    monsterHealthLocal = localStorage.getItem(''),
-    inventoryLocal = localStorage.getItem('')
 
-const goldBuyHealth = 25
-const goldBuyWeapon = 100
+// const user = {
+//     xp: 0,
+//     health: 100,
+//     gold: 100,
+//     currentWeapons: 0,
+//     fighting: true,
+//     monsterHealth: 200,
+//     inventory: ['stick']
+// }
+
+// localStorage.setItem('user', JSON.stringify(user))
+
+let  goldBuyHealth = 25
+let  goldBuyWeapon = 100
 
 function heroUpdate() {
     xpElement.innerText = xp
@@ -81,18 +86,17 @@ const locations = [
     {
         // Home Square
         name: "home square",
-        "button-text": ['Store', 'Food', 'War'],
-        "button-func": [goStore, goFood, goWar],
+        "button-text": ['Store', 'Forest', 'War'],
+        "button-func": [goStore, goForest, goWar],
         text: "You are in the home squre.You go anywhere."
     },
     {
         // Store
         name: 'store',
-        "button-text": ['Buy +10 Health (50 gold)', 'Buy 1 Weapon (100 gold)', 'Go Home'],
+        "button-text": [`Buy +10 Health (${goldBuyHealth} gold)`, 'Buy 1 Weapon (100 gold)', 'Go Home'],
         "button-func": [buyHealth, buyWeapon, goHome],
         text: "You are in the store you can buy and sell your things"
     },
-
     {
         // Find Somethings 
         name: 'Forest',
@@ -100,7 +104,6 @@ const locations = [
         "button-func": [findMushroom, mineGold, goHome],
         text: "You are in the forest you can find food and mine gold"
     },
-
     {
         // Find Somethings 
         name: 'Battle Ground',
@@ -108,15 +111,12 @@ const locations = [
         "button-func": [attack, defense, goHome],
         text: "You are in the battle ground you can fight and kill the dragon."
     }
-
-
 ]
-
 
 // onclick functions
 
 storeBtn.onclick = goStore
-forestBtn.onclick = goFood
+forestBtn.onclick = goForest
 warBtn.onclick = goWar
 
 
@@ -132,8 +132,6 @@ function update(location) {
 
 
     locationElementP.innerText = location.text
-
-
 }
 // Home
 function goHome() {
@@ -146,13 +144,18 @@ function goStore() {
 }
 // Health
 function buyHealth() {
-
-
-    if (health < 100) {
-        gold -= goldBuyHealth
-        health += 10
+    if (gold > 0 && gold > goldBuyHealth) {
+        if (health < 100 && gold > goldBuyHealth) {
+            gold -= goldBuyHealth
+            health += 10
+            locationElementP.innerText = `You buy +10 health `
+            goldBuyHealth += 5
+            storeBtn.innerText = [`Buy +10 Health (${goldBuyHealth} gold)`]
+        } else {
+            locationElementP.innerText = "Your health is full.You can't buy the health"
+        }
     } else {
-        locationElementP.innerText = "Your health is full.You can't buy the health"
+        locationElementP.innerText = "You not enough a gold. Go mine the gold or war againest dragon."
     }
     heroUpdate()
 }
@@ -161,7 +164,7 @@ function buyWeapon() { }
 
 
 // Go food function
-function goFood() {
+function goForest() {
     update(locations[2]) // location --------------------->  2
 }
 // Find the Mushroom

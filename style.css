@@ -169,7 +169,7 @@ body {
 .functions {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-rows: repeat(1, 1fr);
     row-gap: 10px;
     column-gap: 20px;
     padding: 2.5rem 0;
@@ -205,15 +205,21 @@ body {
     height: 100%;
     border-bottom: 2px solid #cccccc2c;
 }
+
 /* Mobil screen 1 */
-@media screen and (min-width:320px) and (max-width:375px){
+@media screen and (min-width:320px) and (max-width:375px) {
     .hero>div {
         font-size: 15px;
     }
 
     .functions {
         grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(3, 1fr);
+    }
+
+    #war {
+        /* grid-column-start: 1;
+        grid-column-end: 3; */
+        grid-column: 1 / span 2;
     }
 
     .func-btn {
@@ -226,18 +232,23 @@ body {
 }
 
 /* Mobile screen 2 */
-@media screen and (min-width:376px) and (max-width:425px){
+@media screen and (min-width:376px) and (max-width:425px) {
     .hero>div {
         font-size: 15px;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        
+
     }
 
     .functions {
         grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(3, 1fr);
+    }
+
+    #war {
+        /* grid-column-start: 1;
+        grid-column-end: 3; */
+        grid-column: 1 / span 2;
     }
 
     .func-btn {
@@ -273,7 +284,12 @@ body {
 
     .functions {
         grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(3, 1fr);
+    }
+
+    #war {
+        /* grid-column-start: 1;
+        grid-column-end: 3; */
+        grid-column: 1 / span 2;
     }
 
     .func-btn {
@@ -283,4 +299,3 @@ body {
         transition: all 0.05s ease-in-out;
     }
 }
-
