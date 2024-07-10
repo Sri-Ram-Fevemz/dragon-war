@@ -1,126 +1,113 @@
+// Selecting and applying dark mode to background
+const bg = document.querySelector('#bg-1')
+bg.classList.add('dark-mode')
 
+// Selecting elements related to the switch button and its status
+const switchEle = document.querySelector('.switch-btn')
+const switchStatus = document.querySelector('.switch-status')
+const switchThumb = document.querySelector('.switch-thumb')
 
-/* ******************************  LIGHT MODE *******************************/
-// variables
-const bg = document.querySelector('#bg-1') // background-1 query 
-bg.classList.add('dark-mode') // #bg-1 to all class list 'dark-mode'
-
-const switchEle = document.querySelector('.switch-btn') // switch-btn class 
-const switchStatus = document.querySelector('.switch-status') // switch-status class
-const switchThumb = document.querySelector('.switch-thumb') // thumb
-
-// local storage create a item eg.'mode'
+// Retrieving mode from localStorage and applying light mode if stored mode is 'light-mode'
 const MODE = localStorage.getItem('mode')
-// assing a local storage item in background 'mode'
-if (MODE === 'light-mode') { // check a is equal the string 
-    bg.classList.add('light-mode')  // if 'light mode' add class 'light-mode' to #bg-1
-    switchThumb.style.transform = 'translateX(25px)' // translate thumb 
-    switchEle.style.background = '#66cc00' // switch background colour to change
+if (MODE === 'light-mode') {
+    bg.classList.add('light-mode') // Apply light mode class to background
+    switchThumb.style.transform = 'translateX(25px)' // Move switch thumb to light mode position
+    switchEle.style.background = '#66cc00' // Set switch button background color to green
 }
-// toggle switch function on/off
+
+// Function to toggle switch between light and dark mode
 function toggleSwitch() {
-    switchEle.classList.toggle('on')
-    bg.classList.toggle('light-mode')
-    // if bg contains light mode do the work
+    switchEle.classList.toggle('on') // Toggle switch button's 'on' class
+    bg.classList.toggle('light-mode') // Toggle light mode class on background
     if (bg.classList.contains('light-mode')) {
-        localStorage.setItem('mode', 'light-mode')
-        switchThumb.style.transform = 'translateX(25px)'
-        switchEle.style.background = '#66cc00'
-        // else do this work
+        localStorage.setItem('mode', 'light-mode') // Store light mode in localStorage
+        switchThumb.style.transform = 'translateX(25px)' // Move switch thumb to light mode position
+        switchEle.style.background = '#66cc00' // Set switch button background color to green
     } else {
-        localStorage.setItem('mode', 'dark-mode')
-        switchThumb.style.transform = 'translateX(0px)'
-        switchEle.style.background = '#ccc'
+        localStorage.setItem('mode', 'dark-mode') // Store dark mode in localStorage
+        switchThumb.style.transform = 'translateX(0px)' // Move switch thumb to dark mode position
+        switchEle.style.background = '#ccc' // Set switch button background color to light gray
     }
 }
 
-/* ********************************** Functions ****************************** */
+// Selecting buttons and elements related to user stats and location
+const storeBtn = document.querySelector('#store') 
+const forestBtn = document.querySelector('#forest') 
+const warBtn = document.querySelector('#war')
 
-// button variables
-const storeBtn = document.querySelector('#store') // Store Button
-const forestBtn = document.querySelector('#forest')  // Food Button 
-const warBtn = document.querySelector('#war') // War Button
-
-// Hero texts
 const xpElement = document.querySelector('#xp span')
 const healthElement = document.querySelector('#health span')
 const goldElement = document.querySelector('#gold span')
-
-// text variables
 const locationElementP = document.querySelector('#location-p')
 
-// Local Variables 
-let xp = 0
-let health = 80
-let gold = 100
-let currentWeapons = 0
-let fighting
-let monsterHealth
-let inventory = ['stick']
+// Initial values for user stats and game state
+// let xp = 0
+// let health = 80
+// let gold = 100
+// let currentWeapons = 0
+// let fighting
+// let monsterHealth
+// let inventory = ['stick']
 
+// Storing initial user data in localStorage
+let data = {
+    xp: 0,
+    health: 60,
+    gold: 101,
+    currentWeapons: 0,
+    fighting: true,
+    monsterHealth: 200,
+    inventory: ['stick']
+}
+localStorage.setItem('user', JSON.stringify(data))
+let user = JSON.parse(localStorage.getItem('user'))
 
-// const user = {
-//     xp: 0,
-//     health: 100,
-//     gold: 100,
-//     currentWeapons: 0,
-//     fighting: true,
-//     monsterHealth: 200,
-//     inventory: ['stick']
-// }
+// Values for buying health and weapons
+let goldBuyHealth = 25
+let goldBuyWeapon = 100
 
-// localStorage.setItem('user', JSON.stringify(user))
-
-let  goldBuyHealth = 25
-let  goldBuyWeapon = 100
-
+// Function to update hero's stats on the interface
 function heroUpdate() {
-    xpElement.innerText = xp
-    healthElement.innerText = health
-    goldElement.innerText = gold
+    xpElement.innerText = user.xp
+    healthElement.innerText = user.health
+    goldElement.innerText = user.gold
 }
 
-heroUpdate()
+heroUpdate() // Initial update of hero's stats
 
+// Array of locations with their respective properties
 const locations = [
     {
-        // Home Square
         name: "home square",
         "button-text": ['Store', 'Forest', 'War'],
         "button-func": [goStore, goForest, goWar],
-        text: "You are in the home squre.You go anywhere."
+        text: "You are in the home square. You can go anywhere."
     },
     {
-        // Store
         name: 'store',
         "button-text": [`Buy +10 Health (${goldBuyHealth} gold)`, 'Buy 1 Weapon (100 gold)', 'Go Home'],
         "button-func": [buyHealth, buyWeapon, goHome],
-        text: "You are in the store you can buy and sell your things"
+        text: "You are in the store. You can buy and sell your things."
     },
     {
-        // Find Somethings 
         name: 'Forest',
         "button-text": ['Find and eat mushroom ', 'Mine Gold', 'Go Home'],
         "button-func": [findMushroom, mineGold, goHome],
-        text: "You are in the forest you can find food and mine gold"
+        text: "You are in the forest. You can find food and mine gold."
     },
     {
-        // Find Somethings 
         name: 'Battle Ground',
         "button-text": ['Attack ', 'Defense', 'Go Home'],
         "button-func": [attack, defense, goHome],
-        text: "You are in the battle ground you can fight and kill the dragon."
+        text: "You are in the battle ground. You can fight and kill the dragon."
     }
 ]
-
-// onclick functions
 
 storeBtn.onclick = goStore
 forestBtn.onclick = goForest
 warBtn.onclick = goWar
 
-
-// Update the locations 
+// Function to update buttons and text based on current location
 function update(location) {
     storeBtn.innerText = location['button-text'][0]
     forestBtn.innerText = location['button-text'][1]
@@ -130,56 +117,107 @@ function update(location) {
     forestBtn.onclick = location['button-func'][1]
     warBtn.onclick = location['button-func'][2]
 
-
     locationElementP.innerText = location.text
 }
-// Home
-function goHome() {
-    update(locations[0]) // location --------------------->  0
 
+// Initial location is set to home square
+function goHome() {
+    update(locations[0])
 }
-// Go Store function
+
+// Function to go to store location
 function goStore() {
-    update(locations[1]) // location --------------------->  1
+    update(locations[1])
 }
-// Health
+
+// Function to buy health at store
 function buyHealth() {
-    if (gold > 0 && gold > goldBuyHealth) {
-        if (health < 100 && gold > goldBuyHealth) {
-            gold -= goldBuyHealth
-            health += 10
-            locationElementP.innerText = `You buy +10 health `
-            goldBuyHealth += 5
-            storeBtn.innerText = [`Buy +10 Health (${goldBuyHealth} gold)`]
+    if (user.gold > 0 && user.gold > goldBuyHealth) {
+
+        let randomGoldBuyHealth = Math.floor(Math.random() * 5) + 1
+
+        console.log(randomGoldBuyHealth);
+
+        if (user.health < 100 && user.gold > goldBuyHealth) {
+            user.gold -= goldBuyHealth
+            user.health += 10
+            locationElementP.innerText = `You bought +10 health.`
+            goldBuyHealth += randomGoldBuyHealth
+            storeBtn.innerText = `Buy +10 Health (${goldBuyHealth} gold)`
         } else {
-            locationElementP.innerText = "Your health is full.You can't buy the health"
+            locationElementP.innerText = "Your health is full. You can't buy more health."
         }
     } else {
-        locationElementP.innerText = "You not enough a gold. Go mine the gold or war againest dragon."
+        locationElementP.innerText = "You don't have enough gold. Go mine gold or fight against dragons."
     }
+  
     heroUpdate()
 }
-// Weapon
-function buyWeapon() { }
 
+// Function to buy weapon at store
+function buyWeapon() {
+    // if (user.gold >= goldBuyWeapon) {
+    //     user.gold -= goldBuyWeapon
+    //     user.currentWeapons++
+    //     locationElementP.innerText = `You bought 1 weapon.`
+    // } else {
+    //     locationElementP.innerText = "You don't have enough gold to buy a weapon."
+    // }
+    // heroUpdate()
+}
 
-// Go food function
+// Function to go to forest location
 function goForest() {
-    update(locations[2]) // location --------------------->  2
+    update(locations[2])
 }
-// Find the Mushroom
-function findMushroom() { }
 
-// Mine the Gold
-function mineGold() { }
-// Go war function
+// Function to find mushroom in forest
+function findMushroom() {
+    // if (user.inventory.includes('mushroom')) {
+    //     locationElementP.innerText = "You already have a mushroom."
+    // } else {
+    //     user.inventory.push('mushroom')
+    //     locationElementP.innerText = "You found and ate a mushroom. It tasted delicious!"
+    // }
+}
+
+// Function to mine gold in forest
+function mineGold() {
+    // const minedGold = Math.floor(Math.random() * 20) + 10
+    // user.gold += minedGold
+    // locationElementP.innerText = `You mined ${minedGold} gold.`
+    // heroUpdate()
+}
+
+// Function to go to war location
 function goWar() {
-    update(locations[3]) // location ----------------------> 3
+    update(locations[3])
 }
 
+// Function to attack in battle ground
 function attack() {
+    // const damage = Math.floor(Math.random() * 20) + 10
+    // const monsterDamage = Math.floor(Math.random() * 20) + 10
 
+    // user.health -= monsterDamage
+    // user.monsterHealth -= damage
+
+    // if (user.monsterHealth <= 0) {
+    //     locationElementP.innerText = `You defeated the dragon! You gained 50 XP and 100 gold.`
+    //     user.xp += 50
+    //     user.gold += 100
+    //     user.fighting = false
+    // } else {
+    //     locationElementP.innerText = `You attacked the dragon for ${damage} damage. The dragon attacked you for ${monsterDamage} damage.`
+    // }
+
+    // heroUpdate()
 }
-function defense() {
 
+// Function to defend in battle ground
+function defense() {
+    // const monsterDamage = Math.floor(Math.random() * 20) + 10
+    // user.health -= monsterDamage
+    // locationElementP.innerText = `You defended against the dragon's attack, but took ${monsterDamage} damage.`
+    // heroUpdate()
 }
