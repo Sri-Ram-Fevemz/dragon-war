@@ -262,29 +262,33 @@ function findMonster() {
 
 // Function to mine gold in forest
 function findGold() {
+
     formElement.classList.remove("hidden")
+    setTimeout(function () {
+        formElement.classList.add("hidden")
+    }, 10000);
 
     let randomNUM = Math.floor(Math.random() * 10) + 1
 
     function numberGuess() {
         console.log(randomNUM);
         let userInput = formInputElement.value
-        let randomGold = Math.floor(Math.random() * 10) + 1
+        let randomGold = Math.floor(Math.random() * 100) + 1
         if (userInput == randomNUM) {
-            data.gold += randomGold
-            locationElementP.innerText = `You finded ${randomGold} gold.`
-            formStatuslement.innerText = `Correct.You finded ${randomGold} gold.`
+            data.gold += randomGold + 100
+            locationElementP.innerText = `You finded ${randomGold + 100} gold.`
+            formStatuslement.innerText = `Correct.You finded ${randomGold + 100} gold.`
             randomNUM = Math.floor(Math.random() * 10) + 1
 
         } else if (userInput > randomNUM) {
-            data.gold += randomGold - 10
-            locationElementP.innerText = `You lost ${Math.abs(randomGold - 10)} gold.`
-            formStatuslement.innerText = `Too High.You lost ${Math.abs(randomGold - 10)} gold.`
+            data.gold -= randomGold - 25
+            locationElementP.innerText = `You lost ${Math.abs(randomGold - 25)} gold.`
+            formStatuslement.innerText = `Too High.You lost ${Math.abs(randomGold - 25)} gold.`
         }
         else {
-            data.gold += randomGold - 10
-            locationElementP.innerText = `You lost ${Math.abs(randomGold - 10)} gold.`
-            formStatuslement.innerText = `Too Low.You lost ${Math.abs(randomGold - 10)} gold.`
+            data.gold -= randomGold - 25
+            locationElementP.innerText = `You lost ${Math.abs(randomGold - 25)} gold.`
+            formStatuslement.innerText = `Too Low.You lost ${Math.abs(randomGold - 25)} gold.`
         }
         heroUpdate()
     }
@@ -292,6 +296,7 @@ function findGold() {
         numberGuess()
         heroUpdate()
     })
+
 
     heroUpdate()
 
@@ -301,17 +306,6 @@ closeElement.addEventListener('click', () => {
 })
 
 
-
-
-
-// document.addEventListener("DOMContentLoaded", function () {
-//     const formContainer = document.querySelector(".form");
-
-//     // Close the form after 10 seconds
-//     setTimeout(function () {
-//         formContainer.classList.add("hidden");
-//     }, 10000);
-// });
 
 // Function to go to war location
 function goWar() {
