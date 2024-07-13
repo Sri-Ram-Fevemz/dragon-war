@@ -31,8 +31,8 @@ function toggleSwitch() {
 }
 
 // Selecting buttons and elements related to user stats and location
-const storeBtn = document.querySelector('#store') 
-const forestBtn = document.querySelector('#forest') 
+const storeBtn = document.querySelector('#store')
+const forestBtn = document.querySelector('#forest')
 const warBtn = document.querySelector('#war')
 
 const xpElement = document.querySelector('#xp span')
@@ -40,27 +40,91 @@ const healthElement = document.querySelector('#health span')
 const goldElement = document.querySelector('#gold span')
 const locationElementP = document.querySelector('#location-p')
 
-// Initial values for user stats and game state
-// let xp = 0
-// let health = 80
-// let gold = 100
-// let currentWeapons = 0
-// let fighting
-// let monsterHealth
-// let inventory = ['stick']
+// Popup message box
+const formElement = document.querySelector('.form')
+const closeElement = document.querySelector('.close')
+const formInputElement = document.querySelector('#form-input')
+const formBtnElement = document.querySelector('#form-btn')
+const formStatuslement = document.querySelector('#form-status span')
 
 // Storing initial user data in localStorage
 let data = {
     xp: 0,
-    health: 60,
-    gold: 101,
+    health: 100,
+    gold: 100,
     currentWeapons: 0,
     fighting: true,
     monsterHealth: 200,
     inventory: ['stick']
 }
-localStorage.setItem('user', JSON.stringify(data))
-let user = JSON.parse(localStorage.getItem('user'))
+
+const weapon = [
+    {
+        name: "stick",
+        power: 5
+    },
+    {
+        name: "dragger",
+        power: 25
+    },
+    {
+        name: "hammer",
+        power: 50
+    },
+    {
+        name: "sword",
+        power: 100
+    }
+]
+
+const monsters = [
+    {
+        name: "Goblin",
+        level: 1,
+        health: 10
+    },
+    {
+        name: "Skeleton",
+        level: 2,
+        health: 25
+    },
+    {
+        name: "Troll",
+        level: 3,
+        health: 30
+    },
+    {
+        name: "Minotaur",
+        level: 4,
+        health: 50
+    },
+    {
+        name: "wypern",
+        level: 5,
+        health: 70
+    },
+    {
+        name: "Cyclops",
+        level: 6,
+        health: 100
+    },
+    {
+        name: "Hydra",
+        level: 7,
+        health: 200
+    },
+    {
+        name: "Dragon Lord",
+        level: 8,
+        health: 300
+    },
+    {
+        name: "Dragon Sorcerer",
+        level: 10,
+        health: 500
+    },
+]
+
 
 // Values for buying health and weapons
 let goldBuyHealth = 25
@@ -68,9 +132,10 @@ let goldBuyWeapon = 100
 
 // Function to update hero's stats on the interface
 function heroUpdate() {
-    xpElement.innerText = user.xp
-    healthElement.innerText = user.health
-    goldElement.innerText = user.gold
+    data.health > 100 ? data.health = 100 : data.health
+    xpElement.innerText = data.xp
+    healthElement.innerText = data.health
+    goldElement.innerText = data.gold
 }
 
 heroUpdate() // Initial update of hero's stats
@@ -91,9 +156,9 @@ const locations = [
     },
     {
         name: 'Forest',
-        "button-text": ['Find and eat mushroom ', 'Mine Gold', 'Go Home'],
-        "button-func": [findMushroom, mineGold, goHome],
-        text: "You are in the forest. You can find food and mine gold."
+        "button-text": ['Find Monsters', 'Find Gold', 'Go Home'],
+        "button-func": [findMonster, findGold, goHome],
+        text: "You are in the forest. You can find monster and gold."
     },
     {
         name: 'Battle Ground',
@@ -132,15 +197,11 @@ function goStore() {
 
 // Function to buy health at store
 function buyHealth() {
-    if (user.gold > 0 && user.gold > goldBuyHealth) {
-
+    if (data.gold > 0 && data.gold > goldBuyHealth) {
         let randomGoldBuyHealth = Math.floor(Math.random() * 5) + 1
-
-        console.log(randomGoldBuyHealth);
-
-        if (user.health < 100 && user.gold > goldBuyHealth) {
-            user.gold -= goldBuyHealth
-            user.health += 10
+        if (data.health < 100 && data.gold > goldBuyHealth) {
+            data.gold -= goldBuyHealth
+            data.health += 10
             locationElementP.innerText = `You bought +10 health.`
             goldBuyHealth += randomGoldBuyHealth
             storeBtn.innerText = `Buy +10 Health (${goldBuyHealth} gold)`
@@ -150,20 +211,43 @@ function buyHealth() {
     } else {
         locationElementP.innerText = "You don't have enough gold. Go mine gold or fight against dragons."
     }
-  
+
     heroUpdate()
 }
 
 // Function to buy weapon at store
 function buyWeapon() {
-    // if (user.gold >= goldBuyWeapon) {
-    //     user.gold -= goldBuyWeapon
-    //     user.currentWeapons++
-    //     locationElementP.innerText = `You bought 1 weapon.`
-    // } else {
-    //     locationElementP.innerText = "You don't have enough gold to buy a weapon."
-    // }
-    // heroUpdate()
+    if (data.currentWeapons < weapon.length - 1) {
+        if (data.gold >= goldBuyWeapon) {
+            data.gold -= goldBuyWeapon
+            data.currentWeapons++
+            let newWeapon = weapon[data.currentWeapons].name
+            locationElementP.innerText = `You bought ${newWeapon} weapon.`
+            data.inventory.push(newWeapon)
+            locationElementP.innerText += "Your inventory is " + data.inventory
+        } else {
+            locationElementP.innerText = "You don't have enough gold to buy a weapon."
+        }
+    } else {
+        locationElementP.innerText = "You already buy most powerful weapons."
+        forestBtn.innerText = "Sell Weapon"
+        forestBtn.onclick = sellWeapon
+    }
+    heroUpdate()
+}
+
+
+function sellWeapon() {
+    if (data.inventory.length > 1) {
+        data.gold += 50
+        let currentWeapon = data.inventory.pop()
+        locationElementP.innerText = "You sold a " + currentWeapon + " ."
+        locationElementP.innerText += "Your inventory is and " + data.inventory
+    } else {
+        locationElementP.innerText = "You have only one weapon.You can't sold " + data.inventory + " ."
+        data.currentWeapons = 0
+    }
+    heroUpdate()
 }
 
 // Function to go to forest location
@@ -172,22 +256,62 @@ function goForest() {
 }
 
 // Function to find mushroom in forest
-function findMushroom() {
-    // if (user.inventory.includes('mushroom')) {
-    //     locationElementP.innerText = "You already have a mushroom."
-    // } else {
-    //     user.inventory.push('mushroom')
-    //     locationElementP.innerText = "You found and ate a mushroom. It tasted delicious!"
-    // }
+function findMonster() {
+
 }
 
 // Function to mine gold in forest
-function mineGold() {
-    // const minedGold = Math.floor(Math.random() * 20) + 10
-    // user.gold += minedGold
-    // locationElementP.innerText = `You mined ${minedGold} gold.`
-    // heroUpdate()
+function findGold() {
+    formElement.classList.remove("hidden")
+
+    let randomNUM = Math.floor(Math.random() * 10) + 1
+
+    function numberGuess() {
+        console.log(randomNUM);
+        let userInput = formInputElement.value
+        let randomGold = Math.floor(Math.random() * 10) + 1
+        if (userInput == randomNUM) {
+            data.gold += randomGold
+            locationElementP.innerText = `You finded ${randomGold} gold.`
+            formStatuslement.innerText = `Correct.You finded ${randomGold} gold.`
+            randomNUM = Math.floor(Math.random() * 10) + 1
+
+        } else if (userInput > randomNUM) {
+            data.gold += randomGold - 10
+            locationElementP.innerText = `You lost ${Math.abs(randomGold - 10)} gold.`
+            formStatuslement.innerText = `Too High.You lost ${Math.abs(randomGold - 10)} gold.`
+        }
+        else {
+            data.gold += randomGold - 10
+            locationElementP.innerText = `You lost ${Math.abs(randomGold - 10)} gold.`
+            formStatuslement.innerText = `Too Low.You lost ${Math.abs(randomGold - 10)} gold.`
+        }
+        heroUpdate()
+    }
+    formBtnElement.addEventListener('click', () => {
+        numberGuess()
+        heroUpdate()
+    })
+
+    heroUpdate()
+
 }
+closeElement.addEventListener('click', () => {
+    formElement.classList.toggle("hidden")
+})
+
+
+
+
+
+// document.addEventListener("DOMContentLoaded", function () {
+//     const formContainer = document.querySelector(".form");
+
+//     // Close the form after 10 seconds
+//     setTimeout(function () {
+//         formContainer.classList.add("hidden");
+//     }, 10000);
+// });
 
 // Function to go to war location
 function goWar() {
@@ -196,28 +320,13 @@ function goWar() {
 
 // Function to attack in battle ground
 function attack() {
-    // const damage = Math.floor(Math.random() * 20) + 10
-    // const monsterDamage = Math.floor(Math.random() * 20) + 10
 
-    // user.health -= monsterDamage
-    // user.monsterHealth -= damage
-
-    // if (user.monsterHealth <= 0) {
-    //     locationElementP.innerText = `You defeated the dragon! You gained 50 XP and 100 gold.`
-    //     user.xp += 50
-    //     user.gold += 100
-    //     user.fighting = false
-    // } else {
-    //     locationElementP.innerText = `You attacked the dragon for ${damage} damage. The dragon attacked you for ${monsterDamage} damage.`
-    // }
-
-    // heroUpdate()
+    heroUpdate()
 }
 
 // Function to defend in battle ground
 function defense() {
-    // const monsterDamage = Math.floor(Math.random() * 20) + 10
-    // user.health -= monsterDamage
-    // locationElementP.innerText = `You defended against the dragon's attack, but took ${monsterDamage} damage.`
-    // heroUpdate()
+    heroUpdate()
 }
+
+

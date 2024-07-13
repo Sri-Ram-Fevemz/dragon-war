@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    <!-- Background videos -->
     <video id="bg-1" autoplay loop muted>
         <source src="bg/bg-1.mp4" type="video/mp4">
     </video>
@@ -21,28 +22,51 @@
     <video id="fire" autoplay loop muted>
         <source src="bg/bg-fire.mp4" type="video/mp4">
     </video>
+
+    <!-- Main game container -->
     <div class="container">
+        <!-- Hero stats -->
         <div class="hero">
             <div id="xp">XP: <span>0</span></div>
             <div id="health">Health: <span>100</span></div>
             <div id="gold">Gold: <span>100</span></div>
+            <!-- Switch button for light/dark mode -->
             <div class="switch-wrap">
                 <div class="switch-btn" onclick="toggleSwitch()">
                     <div class="switch-thumb"></div>
-                    <!-- <div class="switch-status"></div> -->
                 </div>
             </div>
         </div>
+
+        <!-- Action buttons -->
         <div class="functions">
             <button id="store" class="func-btn">Store</button>
             <button id="forest" class="func-btn">Forest</button>
             <button id="war" class="func-btn">War</button>
-
         </div>
+
+        <!-- Location description -->
         <div class="locations">
             <p id="location-p"></p>
         </div>
+
+        <div class="form hidden">
+           <div class="group">
+            <div id="form-image">
+                <img src="https://easyshiksha.com/online_courses/assets/games/number-guessing/images/banner.png" alt="">
+             </div>
+             <div class="input-field">
+                 <input type="number" id="form-input" placeholder="Guess your number">
+                 <button id="form-btn">Submit</button>
+             </div>
+             <label id="form-status">Status : <span>Guess the number between 1-10</span></label>
+           </div>
+           <div class="close">X</div>
+        </div>
+
     </div>
+
+    <!-- Link to JavaScript file -->
     <script src="app.js"></script>
 </body>
 
